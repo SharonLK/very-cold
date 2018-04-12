@@ -143,6 +143,7 @@ venv.bak/
 
 data/lang
 data/local/dict/lexiconp.txt
+data/local/corpus.txt
 data/local/lang
 data/local/tmp
 
@@ -150,11 +151,15 @@ data/test/split1
 data/test/cmvn.scp
 data/test/feats.scp
 data/test/spk2utt
+data/test/text
 
 data/train/split1
 data/train/cmvn.scp
 data/train/feats.scp
 data/train/spk2utt
+data/train/text
+
+digits_audio
 
 exp/
 mfcc/
