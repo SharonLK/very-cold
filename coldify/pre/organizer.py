@@ -42,6 +42,8 @@ if __name__ == "__main__":
 
     types = ["train", "test"]
 
+    corpus = []
+
     for dir_type in types:
         path = os.path.join(source_dir, "..", "..", "digits_audio", dir_type)
 
@@ -51,6 +53,7 @@ if __name__ == "__main__":
             dir_path = os.path.join(path, name_dir)
             if os.path.isdir(dir_path):
                 for recording in os.listdir(dir_path):
+                    corpus.append(" ".join(extract_words(recording)))
                     lines.append(convert_filename(recording))
 
         lines.sort()
@@ -58,3 +61,8 @@ if __name__ == "__main__":
         with open(os.path.join(source_dir, "..", "..", "data", dir_type, "text"), "w") as f:
             for line in lines:
                 f.write("{}{}".format(line, os.linesep))
+
+    corpus.sort()
+    with open(os.path.join(source_dir, "..", "..", "data", "local", "corpus.txt"), "w") as f:
+        for line in corpus:
+            f.write("{}{}".format(line, os.linesep))

@@ -1,8 +1,10 @@
+eight eight four
 eight five eight
 eight five four
 eight four one
 eight four six
 eight nine six
+eight three eight
 eight zero one
 five eight three
 five five one
@@ -16,6 +18,7 @@ five zero six
 five zero three
 four eight five
 four eight one
+four eight three
 four four zero
 four one seven
 four one zero
@@ -23,6 +26,7 @@ four seven eight
 four six zero
 four two three
 nine eight eight
+nine eight seven
 nine eight two
 nine seven four
 nine seven six
@@ -34,7 +38,9 @@ nine two one
 nine two seven
 nine two zero
 nine zero zero
+one eight seven
 one five eight
+one nine four
 one one six
 one one three
 one three nine
@@ -46,6 +52,7 @@ one zero two
 seven eight eight
 seven eight six
 seven five six
+seven four five
 seven four one
 seven nine one
 seven nine three
@@ -60,7 +67,9 @@ six seven zero
 six zero five
 six zero two
 three five one
+three five seven
 three five two
+three four five
 three four nine
 three four six
 three nine eight
@@ -87,4 +96,5 @@ zero one eight
 zero one one
 zero seven two
 zero six seven
+zero six three
 zero three nine
