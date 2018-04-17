@@ -1,100 +1,30 @@
-eight eight four
-eight five eight
-eight five four
-eight four one
-eight four six
-eight nine six
-eight three eight
-eight zero one
-five eight three
-five five one
-five one one
-five one six
-five one six
-five seven six
-five six zero
-five two nine
-five zero six
-five zero three
-four eight five
-four eight one
-four eight three
-four four zero
-four one seven
-four one zero
-four seven eight
-four six zero
-four two three
-nine eight eight
-nine eight seven
-nine eight two
-nine seven four
-nine seven six
-nine six nine
-nine three nine
-nine three two
-nine two four
-nine two one
-nine two seven
-nine two zero
-nine zero zero
-one eight seven
-one five eight
-one nine four
-one one six
-one one three
-one three nine
-one two eight
-one two nine
-one two three
-one zero seven
-one zero two
-seven eight eight
-seven eight six
-seven five six
-seven four five
-seven four one
-seven nine one
-seven nine three
-seven seven nine
-seven six eight
-seven three zero
-seven zero seven
-six eight nine
-six eight two
-six one three
-six seven zero
-six zero five
-six zero two
-three five one
-three five seven
-three five two
-three four five
-three four nine
-three four six
-three nine eight
-three seven four
-three six five
-three two eight
-three two eight
-two eight three
-two eight two
-two five nine
-two one three
-two seven four
-two six four
-two six nine
-two six six
-two three eight
-two two five
-two zero five
-two zero four
-two zero six
-zero eight six
-zero five four
-zero one eight
-zero one one
-zero seven two
-zero six seven
-zero six three
-zero three nine
+aaver modul ahat le aazana
+aaver modul ahat le shidur
+aaver modul arba esre le aazana
+aaver modul efes le shidur
+aaver modul eser le shidur
+aaver modul esrim ve ahat le shidur
+aaver modul shlosh esre le shidur
+aaver modul shtaim le aazana
+aaver modul tesha le aazana
+aaver modul tsha esre le aazana
+ahat esre eser hamesh esre esrim shesh esrim ve arba sheva shtaim efes shlosh esre shteim esre shmona esre
+ahat esre shva esre shesh shteim esre esrim ve shalosh arba esre arba hamesh shalosh ahat shmona esre esrim ve ahat shesh esre
+avor le gibui ahat
+avor le gibui ahat
+avor le gibui shalosh
+avor le gibui shtaim
+avor le gibui shtaim
+batzea aktzaa be modul esrim ve shalosh le arutz sheva shmone arba shtaim
+batzea aktzaa be modul hamesh le arutz hamesh arba shtaim ahat
+batzea aktzaa be modul shalosh le arutz shesh sheva shmone tesha
+batzea aktzaa be modul shtaim le arutz shalosh arba hamesh shesh
+batzea aktzaa be modul shteim esre le arutz shalosh tesha shtaim sheva
+efes sheva ahat esre shmona esre tsha esre arba esre esrim ve shalosh esrim ve ahat esrim ve shtaim shtaim shmone ahat shesh esre
+esrim shmone tsha esre tesha shlosh esre esrim ve shtaim hamesh esre efes eser sheva shtaim
+hamesh arba esre esrim esrim ve shtaim shteim esre tsha esre ahat esrim ve ahat shmona esre esrim ve shalosh efes
+shalosh shmone esrim ve ahat esrim ve shalosh arba esre hamesh esre efes shtaim ahat arba ahat esre shesh eser
+shesh esre esrim ve arba shalosh shmone sheva shtaim arba ahat esre shlosh esre tesha shesh hamesh esre shva esre eser
+shlosh esre shesh esre shmona esre shva esre shteim esre tesha hamesh sheva esrim ve shtaim esrim tsha esre
+tesha shteim esre arba shalosh shesh hamesh shva esre eser hamesh esre shlosh esre esrim esrim ve arba
+tsha esre shva esre tesha arba esre arba hamesh esrim ve ahat ahat esrim ve shtaim shesh esre esrim ve shalosh shmone shalosh

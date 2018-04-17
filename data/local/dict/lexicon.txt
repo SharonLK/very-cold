@@ -1,23 +1,31 @@
 !SIL sil
 <UNK> spn
-eight sh m ow1 n eh1
-eight sh m ow2 n eh1
-five xh aa0 m eh1 sh
-four aa0 r b aa0
-nine t eh1 sh aa0
-nine t ey1 sh aa0
-one eh1 ch aa0 d
-one eh1 xh aa0 d
-seven sh eh1 v aa0
-seven sh ey1 v aa0
-six sh eh1 sh
-six sh ey1 sh
-three sh aa0 l ow1 sh
-two sh eh1 t ay2 m
-two sh eh1 t iy0 m
-two sh t aa0 iy0 m
-two sh t  ay2 m
-zero eh1 f eh1 s
-zero eh1 f eh2 s
-zero eh1 f s
-zero eh2 f eh2 s
+aaver ha ʔa ve r
+aazana ha ʔa za na
+ahat ʔa ha t
+aktzaa ʔa k tsa ʔa
+arba ʔa r ba
+aruts ʔa ru ts
+avor ʔa vo r
+batzea ba tse ʔa
+be be
+efes ʔe fe s
+esre ʔe s re
+esrim ʔe s ri m
+gibui gi bu j
+hamesh ha me ʃ
+le le
+modul mo du l
+shalosh ʃa lo ʃ
+shesh ʃe ʃ
+sheva ʃe va
+shidur ʃi du r
+shlosh ʃ lo ʃ
+shmona ʃ mo na
+shmone ʃ mo ne
+shtaim ʃ ta ji m
+shteim ʃ te ji m
+shva ʃ va
+tesha te ʃa
+tsha t ʃa
+ve ve
