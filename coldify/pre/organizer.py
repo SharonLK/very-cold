@@ -17,8 +17,18 @@ def extract_words(name):
     :param name: file name
     :return: list of the words spoken in that .wav file
     """
-    nums = [numeric.to_number(char) for char in name if numeric.is_number(char)]
-    return [numeric.to_string_repr(num) for num in nums]
+    if re.search(r"[a-zA-Z]+-1", name):
+        return __parse_1(name)
+    if re.search(r"[a-zA-Z]+-2", name):
+        return __parse_2(name)
+    if re.search(r"[a-zA-Z]+-3", name):
+        return __parse_3(name)
+    if re.search(r"[a-zA-Z]+-4", name):
+        return __parse_4(name)
+    if re.search(r"[a-zA-Z]+-5", name):
+        return __parse_5(name)
+    if re.search(r"[a-zA-Z]+-6", name):
+        return __parse_6(name)
 
 
 def extract_name(name):
@@ -50,8 +60,7 @@ def convert_filename(name):
     :param name: file name
     :return: representation of this file as needed by the text file
     """
-    prefix = name[:name.index(".")]
-    return "{} {}".format(prefix, " ".join(extract_words(name)))
+    return "{} {}".format(remove_extension(name), extract_words(name))
 
 
 def remove_extension(name):
@@ -85,6 +94,44 @@ def gender_mapping():
     return mapping
 
 
+def __parse_1(name):
+    parts = remove_extension(name).split("-")[2:]
+
+    return "aaver modul {} le shidur".format(numeric.to_string_repr(parts[0]))
+
+
+def __parse_2(name):
+    parts = remove_extension(name).split("-")[2:]
+
+    return "aaver modul {} le aazana".format(numeric.to_string_repr(parts[0]))
+
+
+def __parse_3(name):
+    parts = remove_extension(name).split("-")[2:]
+
+    return "batzea aktzaa be modul {} le arutz {} {} {} {}".format(numeric.to_string_repr(parts[0]),
+                                                                   numeric.to_string_repr(parts[1]),
+                                                                   numeric.to_string_repr(parts[2]),
+                                                                   numeric.to_string_repr(parts[3]),
+                                                                   numeric.to_string_repr(parts[4]))
+
+
+def __parse_4(name):
+    parts = remove_extension(name).split("-")[2:]
+
+    return "avor le gibui {}".format(numeric.to_string_repr(parts[0]))
+
+
+def __parse_5(name):
+    parts = remove_extension(name).split("-")[2:]
+
+    return " ".join([numeric.to_string_repr(part) for part in parts])
+
+
+def __parse_6(name):
+    return __parse_5(name)
+
+
 if __name__ == "__main__":
     source_dir = os.path.dirname(os.path.realpath(sys.argv[0]))
 
@@ -109,7 +156,7 @@ if __name__ == "__main__":
                 for recording in os.listdir(dir_path):
                     name = extract_name(recording)
                     utt2spk_lines.append("{} {}".format(remove_extension(recording), name))
-                    corpus.append(" ".join(extract_words(recording)))
+                    corpus.append(extract_words(recording))
                     text_lines.append(convert_filename(recording))
                     wavscp_lines.append("{} {}".format(remove_extension(recording),
                                                        os.path.normpath(os.path.join(dir_path, recording))))
