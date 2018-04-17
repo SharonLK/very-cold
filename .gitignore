@@ -142,7 +142,10 @@ venv.bak/
 ### Kaldi
 
 data/lang/
-data/local/
+data/local/corpus.txt
+data/local/lang/
+data/local/tmp/
+data/local/dict
 data/test/
 data/train/
 
