@@ -95,21 +95,73 @@ def gender_mapping():
 
 
 def __parse_1(name):
+    """Parses files of type 1
+
+    Files of type 1 have the following structure as their name:
+
+        <name>-1-<num>
+
+    The <name> parameter is the name of the speaker.
+    The <num> parameter is the number spoken in the file.
+
+    The output format is:
+
+        aaver modul <num> le shidur
+
+    :param name: file name
+    :return: string representing the data in this file
+    """
     parts = remove_extension(name).split("-")[2:]
 
     return "aaver modul {} le shidur".format(numeric.to_string_repr(parts[0]))
 
 
 def __parse_2(name):
+    """Parses files of type 2
+
+    Files of type 2 have the following structure as their name:
+
+        <name>-2-<num>
+
+    The <name> parameter is the name of the speaker.
+    The <num> parameter is the number spoken in the file.
+
+    The output format is:
+
+        aaver modul <num> le aazana
+
+    :param name: file name
+    :return: string representing the data in this file
+    """
     parts = remove_extension(name).split("-")[2:]
 
     return "aaver modul {} le aazana".format(numeric.to_string_repr(parts[0]))
 
 
 def __parse_3(name):
+    """Parses files of type 3
+
+    Files of type 3 have the following structure as their name:
+
+        <name>-3-<num#1>-<num#2>-<num#3>-<num#4>-<num#5>
+
+    The <name> parameter is the name of the speaker.
+    The <num#1> parameter is the number spoken in the file.
+    The <num#2> parameter is the first digit of second number.
+    The <num#3> parameter is the second digit of second number
+    The <num#4> parameter is the third digit of second number
+    The <num#5> parameter is the fifth digit of second number
+
+    The output format is:
+
+        batsea aktsaa be modul <num#1> le aruts <num#2> <num#2> <num#4> <num#5>
+
+    :param name: file name
+    :return: string representing the data in this file
+    """
     parts = remove_extension(name).split("-")[2:]
 
-    return "batzea aktzaa be modul {} le arutz {} {} {} {}".format(numeric.to_string_repr(parts[0]),
+    return "batsea aktsaa be modul {} le aruts {} {} {} {}".format(numeric.to_string_repr(parts[0]),
                                                                    numeric.to_string_repr(parts[1]),
                                                                    numeric.to_string_repr(parts[2]),
                                                                    numeric.to_string_repr(parts[3]),
@@ -117,18 +169,60 @@ def __parse_3(name):
 
 
 def __parse_4(name):
+    """Parses files of type 4
+
+    Files of type 4 have the following structure as their name:
+
+        <name>-4-<num>
+
+    The <name> parameter is the name of the speaker.
+    The <num> parameter is the number spoken in the file.
+
+    The output format is:
+
+        avor le gibui <num>
+
+    :param name: file name
+    :return: string representing the data in this file
+    """
     parts = remove_extension(name).split("-")[2:]
 
     return "avor le gibui {}".format(numeric.to_string_repr(parts[0]))
 
 
 def __parse_5(name):
+    """Parses files of type 5
+
+    Files of type 5 have the following structure as their name:
+
+        <name>-4-<num#1>-<num#2>-...-<num#n>
+
+    The <name> parameter is the name of the speaker.
+    The <num#1> parameter is the first number spoken in the file.
+    The <num#2> parameter is the second number spoken in the file.
+    ...
+    The <num#n> parameter is the n'th number spoken in the file.
+
+    The output format is:
+
+        <num#1> <num#2> ... <num#n>
+
+    :param name: file name
+    :return: string representing the data in this file
+    """
     parts = remove_extension(name).split("-")[2:]
 
     return " ".join([numeric.to_string_repr(part) for part in parts])
 
 
 def __parse_6(name):
+    """Parses files of type 6
+
+    The input and output format are exactly the same as in type 5.
+
+    :param name: file name
+    :return: string representing the data in this file
+    """
     return __parse_5(name)
 
 
