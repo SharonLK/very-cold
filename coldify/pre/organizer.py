@@ -5,30 +5,21 @@ import sys
 from coldify.utils import numeric
 
 
-def extract_words(name):
-    """Extracts the words from the file name
+def parse_for_text_file(name):
+    """Converts a file name to the wanted format in the train/test text file
 
     For example, if the file name is
 
-        dan_897.wav
+        chen432.wav
 
-    this function will extract the numbers and return ["eight", "nine", "seven"].
+    this function will return the following string:
+
+        chen432 four three two
 
     :param name: file name
-    :return: list of the words spoken in that .wav file
+    :return: representation of this file as needed by the text file
     """
-    if re.search(r"[a-zA-Z]+-1", name):
-        return __parse_1(name)
-    if re.search(r"[a-zA-Z]+-2", name):
-        return __parse_2(name)
-    if re.search(r"[a-zA-Z]+-3", name):
-        return __parse_3(name)
-    if re.search(r"[a-zA-Z]+-4", name):
-        return __parse_4(name)
-    if re.search(r"[a-zA-Z]+-5", name):
-        return __parse_5(name)
-    if re.search(r"[a-zA-Z]+-6", name):
-        return __parse_6(name)
+    return "{} {}".format(remove_extension(name), parse_name(name))
 
 
 def extract_name(name):
@@ -44,23 +35,6 @@ def extract_name(name):
     :return: recording speaker name
     """
     return re.search(r"[a-zA-Z]*", name).group()
-
-
-def convert_filename(name):
-    """Converts a file name to the wanted format in the train/test text file
-
-    For example, if the file name is
-
-        chen432.wav
-
-    this function will return the following string:
-
-        chen432 four three two
-
-    :param name: file name
-    :return: representation of this file as needed by the text file
-    """
-    return "{} {}".format(remove_extension(name), extract_words(name))
 
 
 def remove_extension(name):
@@ -94,7 +68,30 @@ def gender_mapping():
     return mapping
 
 
-def __parse_1(name):
+def parse_name(name):
+    """Extracts the words from the file name
+
+    Extracts the words from the filename according to its type. To see the format of each type and how the output will
+    look like, refer to the documentation of __parse_x() functions.
+
+    :param name: file name
+    :return: string representing the words spoken in the file
+    """
+    if re.search(r"[a-zA-Z]+-1", name):
+        return __parse_name_1(name)
+    if re.search(r"[a-zA-Z]+-2", name):
+        return __parse_name_2(name)
+    if re.search(r"[a-zA-Z]+-3", name):
+        return __parse_name_3(name)
+    if re.search(r"[a-zA-Z]+-4", name):
+        return __parse_name_4(name)
+    if re.search(r"[a-zA-Z]+-5", name):
+        return __parse_name_5(name)
+    if re.search(r"[a-zA-Z]+-6", name):
+        return __parse_name_6(name)
+
+
+def __parse_name_1(name):
     """Parses files of type 1
 
     Files of type 1 have the following structure as their name:
@@ -116,7 +113,7 @@ def __parse_1(name):
     return "aaver modul {} le shidur".format(numeric.to_string_repr(parts[0]))
 
 
-def __parse_2(name):
+def __parse_name_2(name):
     """Parses files of type 2
 
     Files of type 2 have the following structure as their name:
@@ -138,7 +135,7 @@ def __parse_2(name):
     return "aaver modul {} le aazana".format(numeric.to_string_repr(parts[0]))
 
 
-def __parse_3(name):
+def __parse_name_3(name):
     """Parses files of type 3
 
     Files of type 3 have the following structure as their name:
@@ -168,7 +165,7 @@ def __parse_3(name):
                                                                    numeric.to_string_repr(parts[4]))
 
 
-def __parse_4(name):
+def __parse_name_4(name):
     """Parses files of type 4
 
     Files of type 4 have the following structure as their name:
@@ -190,7 +187,7 @@ def __parse_4(name):
     return "avor le gibui {}".format(numeric.to_string_repr(parts[0]))
 
 
-def __parse_5(name):
+def __parse_name_5(name):
     """Parses files of type 5
 
     Files of type 5 have the following structure as their name:
@@ -215,7 +212,7 @@ def __parse_5(name):
     return " ".join([numeric.to_string_repr(part) for part in parts])
 
 
-def __parse_6(name):
+def __parse_name_6(name):
     """Parses files of type 6
 
     The input and output format are exactly the same as in type 5.
@@ -223,7 +220,7 @@ def __parse_6(name):
     :param name: file name
     :return: string representing the data in this file
     """
-    return __parse_5(name)
+    return __parse_name_5(name)
 
 
 if __name__ == "__main__":
@@ -250,8 +247,8 @@ if __name__ == "__main__":
                 for recording in os.listdir(dir_path):
                     name = extract_name(recording)
                     utt2spk_lines.append("{} {}".format(remove_extension(recording), name))
-                    corpus.append(extract_words(recording))
-                    text_lines.append(convert_filename(recording))
+                    corpus.append(parse_name(recording))
+                    text_lines.append(parse_for_text_file(recording))
                     wavscp_lines.append("{} {}".format(remove_extension(recording),
                                                        os.path.normpath(os.path.join(dir_path, recording))))
 
