@@ -145,7 +145,7 @@ data/lang/
 data/local/corpus.txt
 data/local/lang/
 data/local/tmp/
-data/local/dict
+data/local/dict/lexiconp.txt
 data/test/
 data/train/
 
