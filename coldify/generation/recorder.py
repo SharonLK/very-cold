@@ -10,12 +10,13 @@ class Recorder:
     RECORD_SECONDS = 5
 
     def __init__(self):
-        self.audio = pyaudio.PyAudio()
-        self.stream = []
-        self.frames = []
+        self.audio = None
+        self.stream = None
+        self.frames = None
 
     def startRecording(self):
         self.frames = []
+        self.audio = pyaudio.PyAudio()
         # start Recording
         self.stream = self.audio.open(format=self.FORMAT,
                                       channels=self.CHANNELS,
