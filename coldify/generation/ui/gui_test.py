@@ -12,33 +12,57 @@ class Window(QtGui.QWidget):
 
     def initUI(self):
         grid = QtGui.QGridLayout()
+        grid.setMargin(10)
+        grid.setHorizontalSpacing(10)
+        grid.setVerticalSpacing(10)
         self.setLayout(grid)
 
         self.title = QtGui.QLabel("Cold Recorder")
+
+        self.path = QtGui.QLineEdit()
+        self.path.setFixedWidth(300)
+        self.path.setText("C:\\Users\\Sharon\\Desktop\\")
+
         self.record = QtGui.QPushButton("Start Recording")
+        self.record.setStyleSheet("border-radius: 2px;" +
+                                  "background-color: #98B475;"
+                                  "font-weight: bold;" +
+                                  "font-size: 18;" +
+                                  "border-color: black;" +
+                                  "border-width: 1px;" +
+                                  "border-style: outset;")
+        self.record.setFixedHeight(40)
         self.record.clicked.connect(self.recordClicked)
-        self.stop = QtGui.QPushButton("Stop Recording")
-        self.stop.clicked.connect(self.stopClicked)
-        self.stop.setEnabled(False)
 
         grid.addWidget(self.title, 0, 0)
-        grid.addWidget(self.record, 1, 0)
-        grid.addWidget(self.stop, 2, 0)
+        grid.addWidget(QtGui.QLabel("Save recording to:"), 1, 0)
+        grid.addWidget(self.path, 2, 0)
+        grid.addWidget(self.record, 3, 0)
 
         self.move(300, 300)
         self.setWindowTitle('Cold Recorder')
 
     def recordClicked(self):
-        print("Start Clicked")
-        self.record.setEnabled(False)
-        self.stop.setEnabled(True)
-        self.recorder.startRecording()
-
-    def stopClicked(self):
-        print("Stop Clicked")
-        self.record.setEnabled(True)
-        self.stop.setEnabled(False)
-        self.recorder.stopRecording()
+        if "Start" in self.record.text():
+            self.record.setText("Stop Recording")
+            self.record.setStyleSheet("border-radius: 2px;" +
+                                    "background-color: #AB4441;"
+                                    "font-weight: bold;" +
+                                    "font-size: 18;" +
+                                    "border-color: black;" +
+                                    "border-width: 1px;" +
+                                    "border-style: outset;")
+            self.recorder.startRecording()
+        elif "Stop" in self.record.text():
+            self.record.setText("Start Recording")
+            self.record.setStyleSheet("border-radius: 2px;" +
+                                    "background-color: #98B475;"
+                                    "font-weight: bold;" +
+                                    "font-size: 18;" +
+                                    "border-color: black;" +
+                                    "border-width: 1px;" +
+                                    "border-style: outset;")
+            self.recorder.stopRecording(self.path.text())
 
 
 def main():
