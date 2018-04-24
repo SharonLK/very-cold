@@ -77,17 +77,17 @@ def parse_name(name):
     :param name: file name
     :return: string representing the words spoken in the file
     """
-    if re.search(r"[a-zA-Z]+-1", name):
+    if re.search(r"^[a-zA-Z0-9]+-1", name):
         return __parse_name_1(name)
-    if re.search(r"[a-zA-Z]+-2", name):
+    if re.search(r"^[a-zA-Z0-9]+-2", name):
         return __parse_name_2(name)
-    if re.search(r"[a-zA-Z]+-3", name):
+    if re.search(r"^[a-zA-Z0-9]+-3", name):
         return __parse_name_3(name)
-    if re.search(r"[a-zA-Z]+-4", name):
+    if re.search(r"^[a-zA-Z0-9]+-4", name):
         return __parse_name_4(name)
-    if re.search(r"[a-zA-Z]+-5", name):
+    if re.search(r"^[a-zA-Z0-9]+-5", name):
         return __parse_name_5(name)
-    if re.search(r"[a-zA-Z]+-6", name):
+    if re.search(r"^[a-zA-Z0-9]+-6", name):
         return __parse_name_6(name)
 
 
