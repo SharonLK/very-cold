@@ -39,28 +39,27 @@ class Window(QtGui.QWidget):
         self.record_text = None
         self.record_button = None
         self.cancel_button = None
+        self.status = None
         self.listview = None
         self.list_model = None
         self.init_ui()
 
     def init_sentences(self):
         # Iterate over all odd number between 1 and 24 for type 1 sentence
-        for i in range(1, 25, 2):
+        for i in range(0, 25, 1):
             self.sentences.append(Data("העבר מודול {} לשידור".format(i), "-1-{}".format(i)))
 
         # Iterate over all even number between 0 and 24 for type 2 sentence
-        for i in range(0, 25, 2):
+        for i in range(0, 25, 1):
             self.sentences.append(Data("העבר מודול {} להאזנה".format(i), "-2-{}".format(i)))
 
         # Iterate over all odd number between 1 and 24 for type 3 sentence
-        for i in range(1, 25, 2):
+        for i in range(0, 25, 1):
             d1, d2, d3, d4 = random.randint(0, 9), random.randint(0, 9), random.randint(0, 9), random.randint(0, 9)
             self.sentences.append(Data("בצע הקצאה במודול {} לערוץ {}, {}, {}, {}".format(i, d1, d2, d3, d4),
                                        "-3-{}-{}-{}-{}-{}".format(i, d1, d2, d3, d4)))
 
-        # Iterate twice over the number 1, 2 & 3 for type 4 sentence
-        for i in range(1, 4):
-            self.sentences.append(Data("עבור לגיבוי {}".format(i), "-4-{}".format(i)))
+        # Iterate the numbers 1, 2 & 3 for type 4 sentence
         for i in range(1, 4):
             self.sentences.append(Data("עבור לגיבוי {}".format(i), "-4-{}".format(i)))
 
@@ -90,7 +89,7 @@ class Window(QtGui.QWidget):
         explanation.setStyleSheet("font-weight: bold; font-size: 16px;")
 
         self.record_text = QtGui.QLabel()
-        self.record_text.setStyleSheet("font-weight: bold; font-size: 16px; padding: 20px 20px 20px 20px")
+        self.record_text.setStyleSheet("font-weight: bold; font-size: 16px; padding: 20px 20px 20px 20px; color: red;")
         self.__set_sentence()
 
         # Button used to start and stop recordings
@@ -106,6 +105,9 @@ class Window(QtGui.QWidget):
         self.cancel_button.setFixedHeight(40)
         self.cancel_button.setDisabled(True)
         self.cancel_button.clicked.connect(self.cancel_clicked)
+
+        self.status = QtGui.QLabel("Status: {}\{}".format(self.current_index, len(self.sentences)))
+        self.status.setStyleSheet("font-weight: bold; font-size: 16px;")
 
         self.listview = QtGui.QListView()
         self.listview.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
@@ -125,13 +127,16 @@ class Window(QtGui.QWidget):
         grid.addWidget(self.record_text, 3, 0, 1, 2)
         grid.addWidget(self.cancel_button, 4, 0)
         grid.addWidget(self.record_button, 4, 1)
-        grid.addWidget(self.listview, 5, 0, 1, 2)
+        grid.addWidget(self.status, 5, 0)
+        grid.addWidget(self.listview, 6, 0, 1, 2)
 
         self.move(300, 300)
         self.setWindowTitle('Cold Recorder')
 
     def __set_sentence(self):
         self.record_text.setText(self.sentences[self.current_index].sentence)
+        if self.status is not None:
+            self.status.setText("Status: {}\{}".format(self.current_index, len(self.sentences)))
 
     def record_clicked(self):
         if "התחל" in self.record_button.text():
