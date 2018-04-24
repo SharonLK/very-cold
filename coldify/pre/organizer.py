@@ -157,12 +157,10 @@ def __parse_name_3(name):
     :return: string representing the data in this file
     """
     parts = remove_extension(name).split("-")[2:]
+    module = parts[0]
+    numbers = " ".join([numeric.to_string_repr(part) for part in parts[1:]])
 
-    return "batsea aktsaa be modul {} le aruts {} {} {} {}".format(numeric.to_string_repr(parts[0]),
-                                                                   numeric.to_string_repr(parts[1]),
-                                                                   numeric.to_string_repr(parts[2]),
-                                                                   numeric.to_string_repr(parts[3]),
-                                                                   numeric.to_string_repr(parts[4]))
+    return "batsea aktsaa be modul {} le aruts {}".format(module, numbers)
 
 
 def __parse_name_4(name):
