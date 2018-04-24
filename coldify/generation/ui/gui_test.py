@@ -10,6 +10,13 @@ from coldify.generation.recorder import Recorder
 Data = namedtuple("Data", ["sentence", "postfix"])
 
 
+class Colors:
+    START = "98B475"
+    STOP = "F9C991"
+    CANCEL = "AB4441"
+    CANCEL_DISABLED = "585548"
+
+
 class Window(QtGui.QWidget):
     DEFAULT_BUTTON_STYLE = "border-radius: 2px;" + \
                            "font-weight: bold;" + \
@@ -27,10 +34,11 @@ class Window(QtGui.QWidget):
         self.current_index = 0
         self.sentences = []
         self.init_sentences()
-        
+
         self.name = None
         self.record_text = None
         self.record_button = None
+        self.cancel_button = None
         self.init_ui()
 
     def init_sentences(self):
@@ -74,16 +82,23 @@ class Window(QtGui.QWidget):
         self.record_text.setStyleSheet("font-weight: bold; font-size: 16px; padding: 20px 20px 20px 20px")
         self.__set_sentence()
 
-        self.record_button = QtGui.QPushButton("Start Recording")
-        self.record_button.setStyleSheet(self.DEFAULT_BUTTON_STYLE + "background-color: #98B475;")
+        self.record_button = QtGui.QPushButton("התחל להקליט")
+        self.record_button.setStyleSheet(self.DEFAULT_BUTTON_STYLE + "background-color: #{};".format(Colors.START))
         self.record_button.setFixedHeight(40)
         self.record_button.clicked.connect(self.record_clicked)
 
-        grid.addWidget(name_label, 0, 0)
-        grid.addWidget(self.name, 1, 0)
-        grid.addWidget(explanation, 2, 0)
-        grid.addWidget(self.record_text, 3, 0)
-        grid.addWidget(self.record_button, 4, 0)
+        self.cancel_button = QtGui.QPushButton("בטל הקלטה")
+        self.cancel_button.setStyleSheet(self.DEFAULT_BUTTON_STYLE + "background-color: #{}".format(Colors.CANCEL_DISABLED))
+        self.cancel_button.setFixedHeight(40)
+        self.cancel_button.setDisabled(True)
+        self.cancel_button.clicked.connect(self.cancel_clicked)
+
+        grid.addWidget(name_label, 0, 0, 1, 2)
+        grid.addWidget(self.name, 1, 0, 1, 2)
+        grid.addWidget(explanation, 2, 0, 1, 2)
+        grid.addWidget(self.record_text, 3, 0, 1, 2)
+        grid.addWidget(self.cancel_button, 4, 0)
+        grid.addWidget(self.record_button, 4, 1)
 
         self.move(300, 300)
         self.setWindowTitle('Cold Recorder')
@@ -92,18 +107,29 @@ class Window(QtGui.QWidget):
         self.record_text.setText(self.sentences[self.current_index].sentence)
 
     def record_clicked(self):
-        if "Start" in self.record_button.text():
-            self.record_button.setText("Stop Recording")
-            self.record_button.setStyleSheet(self.DEFAULT_BUTTON_STYLE + "background-color: #AB4441;")
+        if "התחל" in self.record_button.text():
+            self.record_button.setText("סיים הקלטה")
+            self.record_button.setStyleSheet(self.DEFAULT_BUTTON_STYLE + "background-color: #{};".format(Colors.STOP))
             self.recorder.startRecording()
-        elif "Stop" in self.record_button.text():
-            self.record_button.setText("Start Recording")
-            self.record_button.setStyleSheet(self.DEFAULT_BUTTON_STYLE + "background-color: #98B475;")
+
+            self.cancel_button.setDisabled(False)
+            self.cancel_button.setStyleSheet(self.DEFAULT_BUTTON_STYLE + "background-color: #{}".format(Colors.CANCEL))
+        elif "סיים" in self.record_button.text():
+            self.record_button.setText("התחל להקליט")
+            self.record_button.setStyleSheet(self.DEFAULT_BUTTON_STYLE + "background-color: #{};".format(Colors.START))
             self.recorder.stopRecording(
                 os.path.join(self.dictPath, self.sentences[self.current_index].postfix + ".wav"))
+            self.cancel_button.setDisabled(True)
+            self.cancel_button.setStyleSheet(self.DEFAULT_BUTTON_STYLE + "background-color: #{}".format(Colors.CANCEL_DISABLED))
 
             self.current_index += 1
             self.__set_sentence()
+
+    def cancel_clicked(self):
+        self.record_button.setText("התחל להקליט")
+        self.record_button.setStyleSheet(self.DEFAULT_BUTTON_STYLE + "background-color: #{};".format(Colors.START))
+        self.cancel_button.setStyleSheet(self.DEFAULT_BUTTON_STYLE + "background-color: #{}".format(Colors.CANCEL_DISABLED))
+        self.recorder.stopRecording("", save=False)
 
 
 def main():

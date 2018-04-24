@@ -25,17 +25,18 @@ class Recorder:
                                       frames_per_buffer=self.CHUNK,
                                       stream_callback=self.__callback)
 
-    def stopRecording(self, path):
+    def stopRecording(self, path, save=True):
         self.stream.stop_stream()
         self.stream.close()
         self.audio.terminate()
 
-        waveFile = wave.open(path, 'wb')
-        waveFile.setnchannels(self.CHANNELS)
-        waveFile.setsampwidth(self.audio.get_sample_size(self.FORMAT))
-        waveFile.setframerate(self.RATE)
-        waveFile.writeframes(b''.join(self.frames))
-        waveFile.close()
+        if save:
+            waveFile = wave.open(path, 'wb')
+            waveFile.setnchannels(self.CHANNELS)
+            waveFile.setsampwidth(self.audio.get_sample_size(self.FORMAT))
+            waveFile.setframerate(self.RATE)
+            waveFile.writeframes(b''.join(self.frames))
+            waveFile.close()
 
     def __callback(self, in_data, frame_count, time_info, status):
         self.frames.append(in_data)
