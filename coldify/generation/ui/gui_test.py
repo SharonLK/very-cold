@@ -39,35 +39,37 @@ class Window(QtGui.QWidget):
         self.record_text = None
         self.record_button = None
         self.cancel_button = None
+        self.listview = None
+        self.list_model = None
         self.init_ui()
 
     def init_sentences(self):
         # Iterate over all odd number between 1 and 24 for type 1 sentence
-        for i in range(1, 24, 2):
+        for i in range(1, 25, 2):
             self.sentences.append(Data("העבר מודול {} לשידור".format(i), "-1-{}".format(i)))
 
         # Iterate over all even number between 0 and 24 for type 2 sentence
-        for i in range(0, 24, 2):
+        for i in range(0, 25, 2):
             self.sentences.append(Data("העבר מודול {} להאזנה".format(i), "-2-{}".format(i)))
 
         # Iterate over all odd number between 1 and 24 for type 3 sentence
-        for i in range(1, 24, 2):
+        for i in range(1, 25, 2):
             d1, d2, d3, d4 = random.randint(0, 9), random.randint(0, 9), random.randint(0, 9), random.randint(0, 9)
             self.sentences.append(Data("בצע הקצאה במודול {} לערוץ {}, {}, {}, {}".format(i, d1, d2, d3, d4),
                                        "-3-{}-{}-{}-{}-{}".format(i, d1, d2, d3, d4)))
 
         # Iterate twice over the number 1, 2 & 3 for type 4 sentence
-        for i in range(1, 3):
-            self.sentences.append(Data("העבר לגיבוי {}".format(i), "-4-{}".format(i)))
-        for i in range(1, 3):
-            self.sentences.append(Data("העבר לגיבוי {}".format(i), "-4-{}".format(i)))
+        for i in range(1, 4):
+            self.sentences.append(Data("עבור לגיבוי {}".format(i), "-4-{}".format(i)))
+        for i in range(1, 4):
+            self.sentences.append(Data("עבור לגיבוי {}".format(i), "-4-{}".format(i)))
 
         # Record 5 times the user saying all numbers between 0 and 24, shuffled each time differently
         for _ in range(5):
             nums = list(range(0, 25))
             random.shuffle(nums)
             nums = [str(num) for num in nums]
-            self.sentences.append(Data("➡➡➡ {}".format(" ".join(nums)), "-5-{}".format(" ".join(nums))))
+            self.sentences.append(Data("➡➡➡ {}".format(", ".join(nums)), "-5-{}".format("-".join(nums))))
 
     def init_ui(self):
         # Set the Grid Layout as the layout for this GUI
@@ -105,12 +107,25 @@ class Window(QtGui.QWidget):
         self.cancel_button.setDisabled(True)
         self.cancel_button.clicked.connect(self.cancel_clicked)
 
+        self.listview = QtGui.QListView()
+        self.listview.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
+        self.list_model = QtGui.QStandardItemModel(self.listview)
+        self.listview.setModel(self.list_model)
+
+        icon_x = QtGui.QIcon("res/x.png")
+        icon_v = QtGui.QIcon("res/v.png")
+        item1 = QtGui.QStandardItem(icon_v, "שלום עולם!")
+        item2 = QtGui.QStandardItem(icon_x, "שלום עולם!")
+        self.list_model.appendRow(item1)
+        self.list_model.appendRow(item2)
+
         grid.addWidget(name_label, 0, 0, 1, 2)
         grid.addWidget(self.name, 1, 0, 1, 2)
         grid.addWidget(explanation, 2, 0, 1, 2)
         grid.addWidget(self.record_text, 3, 0, 1, 2)
         grid.addWidget(self.cancel_button, 4, 0)
         grid.addWidget(self.record_button, 4, 1)
+        grid.addWidget(self.listview, 5, 0, 1, 2)
 
         self.move(300, 300)
         self.setWindowTitle('Cold Recorder')
@@ -160,6 +175,9 @@ class Window(QtGui.QWidget):
 
         # Stop recording without saving
         self.recorder.stopRecording("", save=False)
+
+    def on_item_clicked(self):
+        pass
 
 
 def main():
