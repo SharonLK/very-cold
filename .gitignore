@@ -153,3 +153,7 @@ digits_audio
 
 exp/
 mfcc/
+
+### VSCode
+.vscode/
+file.wav

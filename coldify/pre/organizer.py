@@ -77,17 +77,17 @@ def parse_name(name):
     :param name: file name
     :return: string representing the words spoken in the file
     """
-    if re.search(r"[a-zA-Z]+-1", name):
+    if re.search(r"^[a-zA-Z0-9]+-1", name):
         return __parse_name_1(name)
-    if re.search(r"[a-zA-Z]+-2", name):
+    if re.search(r"^[a-zA-Z0-9]+-2", name):
         return __parse_name_2(name)
-    if re.search(r"[a-zA-Z]+-3", name):
+    if re.search(r"^[a-zA-Z0-9]+-3", name):
         return __parse_name_3(name)
-    if re.search(r"[a-zA-Z]+-4", name):
+    if re.search(r"^[a-zA-Z0-9]+-4", name):
         return __parse_name_4(name)
-    if re.search(r"[a-zA-Z]+-5", name):
+    if re.search(r"^[a-zA-Z0-9]+-5", name):
         return __parse_name_5(name)
-    if re.search(r"[a-zA-Z]+-6", name):
+    if re.search(r"^[a-zA-Z0-9]+-6", name):
         return __parse_name_6(name)
 
 
@@ -157,12 +157,10 @@ def __parse_name_3(name):
     :return: string representing the data in this file
     """
     parts = remove_extension(name).split("-")[2:]
+    module = parts[0]
+    numbers = " ".join([numeric.to_string_repr(part) for part in parts[1:]])
 
-    return "batsea aktsaa be modul {} le aruts {} {} {} {}".format(numeric.to_string_repr(parts[0]),
-                                                                   numeric.to_string_repr(parts[1]),
-                                                                   numeric.to_string_repr(parts[2]),
-                                                                   numeric.to_string_repr(parts[3]),
-                                                                   numeric.to_string_repr(parts[4]))
+    return "batsea aktsaa be modul {} le aruts {}".format(module, numbers)
 
 
 def __parse_name_4(name):
