@@ -11,10 +11,10 @@ Data = namedtuple("Data", ["sentence", "postfix"])
 
 
 class Colors:
-    START = "98B475"
-    STOP = "F9C991"
-    CANCEL = "AB4441"
-    CANCEL_DISABLED = "585548"
+    START = "98B475"  # Green
+    STOP = "F9C991"  # Orange
+    CANCEL = "AB4441"  # Red
+    CANCEL_DISABLED = "585548"  # Gray
 
 
 class Window(QtGui.QWidget):
@@ -42,18 +42,27 @@ class Window(QtGui.QWidget):
         self.init_ui()
 
     def init_sentences(self):
+        # Iterate over all odd number between 1 and 24 for type 1 sentence
         for i in range(1, 24, 2):
             self.sentences.append(Data("העבר מודול {} לשידור".format(i), "-1-{}".format(i)))
+
+        # Iterate over all even number between 0 and 24 for type 2 sentence
         for i in range(0, 24, 2):
             self.sentences.append(Data("העבר מודול {} להאזנה".format(i), "-2-{}".format(i)))
+
+        # Iterate over all odd number between 1 and 24 for type 3 sentence
         for i in range(1, 24, 2):
             d1, d2, d3, d4 = random.randint(0, 9), random.randint(0, 9), random.randint(0, 9), random.randint(0, 9)
             self.sentences.append(Data("בצע הקצאה במודול {} לערוץ {}, {}, {}, {}".format(i, d1, d2, d3, d4),
                                        "-3-{}-{}-{}-{}-{}".format(i, d1, d2, d3, d4)))
+
+        # Iterate twice over the number 1, 2 & 3 for type 4 sentence
         for i in range(1, 3):
             self.sentences.append(Data("העבר לגיבוי {}".format(i), "-4-{}".format(i)))
         for i in range(1, 3):
             self.sentences.append(Data("העבר לגיבוי {}".format(i), "-4-{}".format(i)))
+
+        # Record 5 times the user saying all numbers between 0 and 24, shuffled each time differently
         for _ in range(5):
             nums = list(range(0, 25))
             random.shuffle(nums)
@@ -82,13 +91,16 @@ class Window(QtGui.QWidget):
         self.record_text.setStyleSheet("font-weight: bold; font-size: 16px; padding: 20px 20px 20px 20px")
         self.__set_sentence()
 
+        # Button used to start and stop recordings
         self.record_button = QtGui.QPushButton("התחל להקליט")
         self.record_button.setStyleSheet(self.DEFAULT_BUTTON_STYLE + "background-color: #{};".format(Colors.START))
         self.record_button.setFixedHeight(40)
         self.record_button.clicked.connect(self.record_clicked)
 
+        # Button to cancel recordings midway
         self.cancel_button = QtGui.QPushButton("בטל הקלטה")
-        self.cancel_button.setStyleSheet(self.DEFAULT_BUTTON_STYLE + "background-color: #{}".format(Colors.CANCEL_DISABLED))
+        self.cancel_button.setStyleSheet(
+            self.DEFAULT_BUTTON_STYLE + "background-color: #{}".format(Colors.CANCEL_DISABLED))
         self.cancel_button.setFixedHeight(40)
         self.cancel_button.setDisabled(True)
         self.cancel_button.clicked.connect(self.cancel_clicked)
@@ -108,27 +120,45 @@ class Window(QtGui.QWidget):
 
     def record_clicked(self):
         if "התחל" in self.record_button.text():
+            # Change button to its Stop version
             self.record_button.setText("סיים הקלטה")
             self.record_button.setStyleSheet(self.DEFAULT_BUTTON_STYLE + "background-color: #{};".format(Colors.STOP))
+
+            # Start recordings
             self.recorder.startRecording()
 
+            # Enable the Cancel button
             self.cancel_button.setDisabled(False)
             self.cancel_button.setStyleSheet(self.DEFAULT_BUTTON_STYLE + "background-color: #{}".format(Colors.CANCEL))
         elif "סיים" in self.record_button.text():
+            # Change button to its Start version
             self.record_button.setText("התחל להקליט")
             self.record_button.setStyleSheet(self.DEFAULT_BUTTON_STYLE + "background-color: #{};".format(Colors.START))
-            self.recorder.stopRecording(
-                os.path.join(self.dictPath, self.sentences[self.current_index].postfix + ".wav"))
-            self.cancel_button.setDisabled(True)
-            self.cancel_button.setStyleSheet(self.DEFAULT_BUTTON_STYLE + "background-color: #{}".format(Colors.CANCEL_DISABLED))
 
+            # Stop recording
+            self.recorder.stopRecording(
+                os.path.join(self.dictPath, self.name.text() + self.sentences[self.current_index].postfix + ".wav"))
+
+            # Disable the Cancel button
+            self.cancel_button.setDisabled(True)
+            self.cancel_button.setStyleSheet(
+                self.DEFAULT_BUTTON_STYLE + "background-color: #{}".format(Colors.CANCEL_DISABLED))
+
+            # Generate a new text for the user to record
             self.current_index += 1
             self.__set_sentence()
 
     def cancel_clicked(self):
+        # Change button to its Start version
         self.record_button.setText("התחל להקליט")
         self.record_button.setStyleSheet(self.DEFAULT_BUTTON_STYLE + "background-color: #{};".format(Colors.START))
-        self.cancel_button.setStyleSheet(self.DEFAULT_BUTTON_STYLE + "background-color: #{}".format(Colors.CANCEL_DISABLED))
+
+        # Disable the Cancel button
+        self.cancel_button.setDisabled(True)
+        self.cancel_button.setStyleSheet(
+            self.DEFAULT_BUTTON_STYLE + "background-color: #{}".format(Colors.CANCEL_DISABLED))
+
+        # Stop recording without saving
         self.recorder.stopRecording("", save=False)
 
 
