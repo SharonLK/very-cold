@@ -1,11 +1,13 @@
 import os
 import random
 import sys
-from random import shuffle
+from collections import namedtuple
 
 from PyQt4 import QtGui
 
 from coldify.generation.recorder import Recorder
+
+Data = namedtuple("Data", ["sentence", "postfix"])
 
 
 class Window(QtGui.QWidget):
@@ -21,112 +23,87 @@ class Window(QtGui.QWidget):
 
         self.recorder = Recorder()
         self.dictPath = os.path.dirname(os.path.realpath(__file__))
-        self.__generate_sequence()
-        self.initUI()
 
-    def initUI(self):
+        self.current_index = 0
+        self.sentences = []
+        self.init_sentences()
+        
+        self.name = None
+        self.record_text = None
+        self.record_button = None
+        self.init_ui()
+
+    def init_sentences(self):
+        for i in range(1, 24, 2):
+            self.sentences.append(Data("העבר מודול {} לשידור".format(i), "-1-{}".format(i)))
+        for i in range(0, 24, 2):
+            self.sentences.append(Data("העבר מודול {} להאזנה".format(i), "-2-{}".format(i)))
+        for i in range(1, 24, 2):
+            d1, d2, d3, d4 = random.randint(0, 9), random.randint(0, 9), random.randint(0, 9), random.randint(0, 9)
+            self.sentences.append(Data("בצע הקצאה במודול {} לערוץ {}, {}, {}, {}".format(i, d1, d2, d3, d4),
+                                       "-3-{}-{}-{}-{}-{}".format(i, d1, d2, d3, d4)))
+        for i in range(1, 3):
+            self.sentences.append(Data("העבר לגיבוי {}".format(i), "-4-{}".format(i)))
+        for i in range(1, 3):
+            self.sentences.append(Data("העבר לגיבוי {}".format(i), "-4-{}".format(i)))
+        for _ in range(5):
+            nums = list(range(0, 25))
+            random.shuffle(nums)
+            nums = [str(num) for num in nums]
+            self.sentences.append(Data("➡➡➡ {}".format(" ".join(nums)), "-5-{}".format(" ".join(nums))))
+
+    def init_ui(self):
+        # Set the Grid Layout as the layout for this GUI
         grid = QtGui.QGridLayout()
         grid.setMargin(10)
         grid.setHorizontalSpacing(10)
         grid.setVerticalSpacing(10)
         self.setLayout(grid)
 
-        nameLabel = QtGui.QLabel("שם (באנגלית)")
-        nameLabel.setStyleSheet("font-weight: bold; font-size: 16px;")
+        name_label = QtGui.QLabel("Name (in English)")
+        name_label.setStyleSheet("font-weight: bold; font-size: 16px;")
 
         self.name = QtGui.QLineEdit()
         self.name.setFixedWidth(300)
         self.name.setStyleSheet("font-size: 16px;")
 
-        # Aaver Shidur
+        explanation = QtGui.QLabel("Press on the Record button, read the text and then press it again")
+        explanation.setStyleSheet("font-weight: bold; font-size: 16px;")
 
-        aaverShidurExpLabel = QtGui.QLabel(
-            r"כשאת\ה מוכן, לחץ על הכפתור ואמור את המשפט הבא, לאחר מכן לחץ על הכפתור פעם נוספת")
-        aaverShidurExpLabel.setStyleSheet("font-weight: bold; font-size: 16px;")
+        self.record_text = QtGui.QLabel()
+        self.record_text.setStyleSheet("font-weight: bold; font-size: 16px; padding: 20px 20px 20px 20px")
+        self.__set_sentence()
 
-        self.aaverShidurRecordLabel = QtGui.QLabel()
-        self.aaverShidurRecordLabel.setStyleSheet(
-            "font-weight: bold; font-size: 16px; padding: 20px 20px 20px 20px")
-        self.aaverShidurNumber = random.randint(0, 24)
-        self.aaverShidurRecordLabel.setText("העבר מודול {} לשידור".format(self.aaverShidurNumber))
+        self.record_button = QtGui.QPushButton("Start Recording")
+        self.record_button.setStyleSheet(self.DEFAULT_BUTTON_STYLE + "background-color: #98B475;")
+        self.record_button.setFixedHeight(40)
+        self.record_button.clicked.connect(self.record_clicked)
 
-        self.aaverShidurButton = QtGui.QPushButton("Start Recording")
-        self.aaverShidurButton.setStyleSheet(self.DEFAULT_BUTTON_STYLE +
-                                             "background-color: #98B475;")
-        self.aaverShidurButton.setFixedHeight(40)
-        self.aaverShidurButton.clicked.connect(self.recordAaverShidurClicked)
-
-        # Number Sequence
-
-        numSeqExpLabel = QtGui.QLabel(
-            r"כשאת\ה מוכן, לחץ על הכפתור ואמור את המפרים משמאל לימין, לאחר מכן לחץ על הכפתור פעם נוספת")
-        numSeqExpLabel.setStyleSheet("font-weight: bold; font-size: 16px;")
-
-        self.numSeqRecordLabel = QtGui.QLabel()
-        self.numSeqRecordLabel.setStyleSheet("font-weight: bold; font-size: 16px; padding: 20px 20px 20px 20px")
-        self.numSeqRecordLabel.setText("    ".join([str(num) for num in self.sequence]))
-
-        self.numSeqButton = QtGui.QPushButton("Start Recording")
-        self.numSeqButton.setStyleSheet(self.DEFAULT_BUTTON_STYLE +
-                                        "background-color: #98B475;")
-        self.numSeqButton.setFixedHeight(40)
-        self.numSeqButton.clicked.connect(self.recordNumberSequenceClicked)
-
-        grid.addWidget(nameLabel, 0, 0)
+        grid.addWidget(name_label, 0, 0)
         grid.addWidget(self.name, 1, 0)
-        grid.addWidget(aaverShidurExpLabel, 2, 0)
-        grid.addWidget(self.aaverShidurRecordLabel, 3, 0)
-        grid.addWidget(self.aaverShidurButton, 4, 0)
-        grid.addWidget(numSeqExpLabel, 5, 0)
-        grid.addWidget(self.numSeqRecordLabel, 6, 0)
-        grid.addWidget(self.numSeqButton, 7, 0)
+        grid.addWidget(explanation, 2, 0)
+        grid.addWidget(self.record_text, 3, 0)
+        grid.addWidget(self.record_button, 4, 0)
 
         self.move(300, 300)
         self.setWindowTitle('Cold Recorder')
 
-    def __generate_sequence(self):
-        self.sequence = list(range(0, 25))
-        shuffle(self.sequence)
+    def __set_sentence(self):
+        self.record_text.setText(self.sentences[self.current_index].sentence)
 
-    def recordAaverShidurClicked(self):
-        if "Start" in self.aaverShidurButton.text():
-            self.aaverShidurButton.setText("Stop Recording")
-            self.aaverShidurButton.setStyleSheet(self.DEFAULT_BUTTON_STYLE +
-                                                 "background-color: #AB4441;")
+    def record_clicked(self):
+        if "Start" in self.record_button.text():
+            self.record_button.setText("Stop Recording")
+            self.record_button.setStyleSheet(self.DEFAULT_BUTTON_STYLE + "background-color: #AB4441;")
             self.recorder.startRecording()
-        elif "Stop" in self.aaverShidurButton.text():
-            self.aaverShidurButton.setText("Start Recording")
-            self.aaverShidurButton.setStyleSheet(self.DEFAULT_BUTTON_STYLE +
-                                                 "background-color: #98B475;")
+        elif "Stop" in self.record_button.text():
+            self.record_button.setText("Start Recording")
+            self.record_button.setStyleSheet(self.DEFAULT_BUTTON_STYLE + "background-color: #98B475;")
             self.recorder.stopRecording(
-                os.path.join(self.dictPath, self.name.text() + "-1-" + str(self.aaverShidurNumber) + ".wav"))
-            self.aaverShidurNumber = random.randint(0, 24)
-            self.aaverShidurRecordLabel.setText("העבר מודול {} לשידור".format(self.aaverShidurNumber))
+                os.path.join(self.dictPath, self.sentences[self.current_index].postfix + ".wav"))
 
-    def recordAaverAazanaClicked(self):
-        pass
-
-    def recordAktzaaClicked(self):
-        pass
-
-    def recordGibuiClicked(self):
-        pass
-
-    def recordNumberSequenceClicked(self):
-        if "Start" in self.numSeqButton.text():
-            self.numSeqButton.setText("Stop Recording")
-            self.numSeqButton.setStyleSheet(self.DEFAULT_BUTTON_STYLE +
-                                            "background-color: #AB4441;")
-            self.recorder.startRecording()
-        elif "Stop" in self.numSeqButton.text():
-            self.numSeqButton.setText("Start Recording")
-            self.numSeqButton.setStyleSheet(self.DEFAULT_BUTTON_STYLE +
-                                            "background-color: #98B475;")
-            self.recorder.stopRecording(os.path.join(self.dictPath, self.name.text() + "-6-" + "-".join(
-                [str(num) for num in self.sequence]) + ".wav"))
-            self.__generate_sequence()
-            self.numSeqRecordLabel.setText("    ".join(
-                [str(num) for num in self.sequence]))
+            self.current_index += 1
+            self.__set_sentence()
 
 
 def main():
