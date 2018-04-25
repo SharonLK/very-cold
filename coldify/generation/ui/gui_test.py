@@ -4,7 +4,6 @@ import sys
 from collections import namedtuple
 
 from PyQt4 import QtGui
-from PyQt4 import QtCore
 
 from coldify.generation.recorder import Recorder
 
@@ -16,14 +15,17 @@ class Colors:
     STOP = "F9C991"  # Orange
     CANCEL = "AB4441"  # Red
     CANCEL_DISABLED = "585548"  # Gray
+    PROCESS = "79B0C0"  # Blue
 
 
 class SentenceWidget(QtGui.QWidget):
-    def __init__(self, text):
+    def __init__(self, sentence):
         super().__init__()
 
+        self.sentence = sentence
+
         hbox = QtGui.QHBoxLayout()
-        hbox.addWidget(QtGui.QLabel(text))
+        hbox.addWidget(QtGui.QLabel(sentence.sentence))
 
         self.setLayout(hbox)
         self.resize(90, 20)
@@ -102,7 +104,9 @@ class Window(QtGui.QWidget):
 
         radio_group = QtGui.QButtonGroup()
         self.male_radio = QtGui.QRadioButton("Male")
+        self.male_radio.setStyleSheet("font-weight: bold; font-size: 16px;")
         self.female_radio = QtGui.QRadioButton("Female")
+        self.female_radio.setStyleSheet("font-weight: bold; font-size: 16px;")
         radio_group.addButton(self.male_radio)
         radio_group.addButton(self.female_radio)
         self.male_radio.setChecked(True)
@@ -129,15 +133,12 @@ class Window(QtGui.QWidget):
         self.cancel_button.clicked.connect(self.cancel_clicked)
 
         self.process_button = QtGui.QPushButton("Process with Kaldi")
-        self.process_button.setStyleSheet("")
+        self.process_button.setStyleSheet(self.DEFAULT_BUTTON_STYLE + "background-color: #{};".format(Colors.PROCESS))
         self.process_button.setFixedHeight(40)
         self.process_button.clicked.connect(self.process_clicked)
 
         self.status = QtGui.QLabel("Status: {}\{}".format(self.current_index, len(self.sentences)))
         self.status.setStyleSheet("font-weight: bold; font-size: 16px;")
-
-        self.list_widget = QtGui.QListWidget()
-        self.list_widget.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
 
         grid.addWidget(name_label, 0, 0, 1, 2)
         grid.addWidget(self.name, 1, 0, 1, 2)
@@ -145,21 +146,13 @@ class Window(QtGui.QWidget):
         grid.addWidget(self.female_radio, 3, 0, 1, 2)
         grid.addWidget(explanation, 4, 0, 1, 2)
         grid.addWidget(self.record_text, 5, 0, 1, 2)
-        grid.addWidget(self.cancel_button, 6, 0)
-        grid.addWidget(self.record_button, 6, 1)
-        grid.addWidget(self.process_button, 7, 0, 1, 2)
-        grid.addWidget(self.status, 8, 0)
-        grid.addWidget(self.list_widget, 9, 0, 1, 2)
+        grid.addWidget(self.status, 6, 0)
+        grid.addWidget(self.cancel_button, 7, 0)
+        grid.addWidget(self.record_button, 7, 1)
+        grid.addWidget(self.process_button, 8, 0, 1, 2)
 
         self.move(300, 300)
         self.setWindowTitle('Cold Recorder')
-
-        item_widget = QtGui.QListWidgetItem()
-        item_widget.setSizeHint(QtCore.QSize(90, 40))
-        self.list_widget.addItem(item_widget)
-
-        label = SentenceWidget("כדשכדש")
-        self.list_widget.setItemWidget(item_widget, label)
 
     def __set_sentence(self):
         self.record_text.setText(self.sentences[self.current_index].sentence)
