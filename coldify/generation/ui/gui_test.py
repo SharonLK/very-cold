@@ -51,6 +51,7 @@ class Window(QtGui.QWidget):
         self.record_text = None
         self.record_button = None
         self.cancel_button = None
+        self.process_button = None
         self.status = None
         self.list_widget = None
         self.list_model = None
@@ -127,6 +128,11 @@ class Window(QtGui.QWidget):
         self.cancel_button.setDisabled(True)
         self.cancel_button.clicked.connect(self.cancel_clicked)
 
+        self.process_button = QtGui.QPushButton("Process with Kaldi")
+        self.process_button.setStyleSheet("")
+        self.process_button.setFixedHeight(40)
+        self.process_button.clicked.connect(self.process_clicked)
+
         self.status = QtGui.QLabel("Status: {}\{}".format(self.current_index, len(self.sentences)))
         self.status.setStyleSheet("font-weight: bold; font-size: 16px;")
 
@@ -141,8 +147,9 @@ class Window(QtGui.QWidget):
         grid.addWidget(self.record_text, 5, 0, 1, 2)
         grid.addWidget(self.cancel_button, 6, 0)
         grid.addWidget(self.record_button, 6, 1)
-        grid.addWidget(self.status, 7, 0)
-        grid.addWidget(self.list_widget, 8, 0, 1, 2)
+        grid.addWidget(self.process_button, 7, 0, 1, 2)
+        grid.addWidget(self.status, 8, 0)
+        grid.addWidget(self.list_widget, 9, 0, 1, 2)
 
         self.move(300, 300)
         self.setWindowTitle('Cold Recorder')
@@ -201,6 +208,10 @@ class Window(QtGui.QWidget):
 
         # Stop recording without saving
         self.recorder.stopRecording("", save=False)
+
+    def process_clicked(self):
+        # TODO: Chen
+        pass
 
     def on_item_clicked(self):
         pass
