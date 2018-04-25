@@ -4,6 +4,7 @@ import sys
 from collections import namedtuple
 
 from PyQt4 import QtGui
+from PyQt4 import QtCore
 
 from coldify.generation.recorder import Recorder
 
@@ -15,6 +16,17 @@ class Colors:
     STOP = "F9C991"  # Orange
     CANCEL = "AB4441"  # Red
     CANCEL_DISABLED = "585548"  # Gray
+
+
+class SentenceWidget(QtGui.QWidget):
+    def __init__(self, text):
+        super().__init__()
+
+        hbox = QtGui.QHBoxLayout()
+        hbox.addWidget(QtGui.QLabel(text))
+
+        self.setLayout(hbox)
+        self.resize(90, 20)
 
 
 class Window(QtGui.QWidget):
@@ -40,8 +52,10 @@ class Window(QtGui.QWidget):
         self.record_button = None
         self.cancel_button = None
         self.status = None
-        self.listview = None
+        self.list_widget = None
         self.list_model = None
+        self.male_radio = None
+        self.female_radio = None
         self.init_ui()
 
     def init_sentences(self):
@@ -85,6 +99,13 @@ class Window(QtGui.QWidget):
         self.name.setFixedWidth(300)
         self.name.setStyleSheet("font-size: 16px;")
 
+        radio_group = QtGui.QButtonGroup()
+        self.male_radio = QtGui.QRadioButton("Male")
+        self.female_radio = QtGui.QRadioButton("Female")
+        radio_group.addButton(self.male_radio)
+        radio_group.addButton(self.female_radio)
+        self.male_radio.setChecked(True)
+
         explanation = QtGui.QLabel("Press on the Record button, read the text and then press it again")
         explanation.setStyleSheet("font-weight: bold; font-size: 16px;")
 
@@ -109,29 +130,29 @@ class Window(QtGui.QWidget):
         self.status = QtGui.QLabel("Status: {}\{}".format(self.current_index, len(self.sentences)))
         self.status.setStyleSheet("font-weight: bold; font-size: 16px;")
 
-        self.listview = QtGui.QListView()
-        self.listview.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
-        self.list_model = QtGui.QStandardItemModel(self.listview)
-        self.listview.setModel(self.list_model)
-
-        icon_x = QtGui.QIcon("res/x.png")
-        icon_v = QtGui.QIcon("res/v.png")
-        item1 = QtGui.QStandardItem(icon_v, "שלום עולם!")
-        item2 = QtGui.QStandardItem(icon_x, "שלום עולם!")
-        self.list_model.appendRow(item1)
-        self.list_model.appendRow(item2)
+        self.list_widget = QtGui.QListWidget()
+        self.list_widget.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
 
         grid.addWidget(name_label, 0, 0, 1, 2)
         grid.addWidget(self.name, 1, 0, 1, 2)
-        grid.addWidget(explanation, 2, 0, 1, 2)
-        grid.addWidget(self.record_text, 3, 0, 1, 2)
-        grid.addWidget(self.cancel_button, 4, 0)
-        grid.addWidget(self.record_button, 4, 1)
-        grid.addWidget(self.status, 5, 0)
-        grid.addWidget(self.listview, 6, 0, 1, 2)
+        grid.addWidget(self.male_radio, 2, 0, 1, 2)
+        grid.addWidget(self.female_radio, 3, 0, 1, 2)
+        grid.addWidget(explanation, 4, 0, 1, 2)
+        grid.addWidget(self.record_text, 5, 0, 1, 2)
+        grid.addWidget(self.cancel_button, 6, 0)
+        grid.addWidget(self.record_button, 6, 1)
+        grid.addWidget(self.status, 7, 0)
+        grid.addWidget(self.list_widget, 8, 0, 1, 2)
 
         self.move(300, 300)
         self.setWindowTitle('Cold Recorder')
+
+        item_widget = QtGui.QListWidgetItem()
+        item_widget.setSizeHint(QtCore.QSize(90, 40))
+        self.list_widget.addItem(item_widget)
+
+        label = SentenceWidget("כדשכדש")
+        self.list_widget.setItemWidget(item_widget, label)
 
     def __set_sentence(self):
         self.record_text.setText(self.sentences[self.current_index].sentence)
