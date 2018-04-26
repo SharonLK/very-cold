@@ -81,7 +81,7 @@ class CalibrationTab(QtGui.QWidget):
             self.sentences.append(Data("➡➡➡ {}".format(", ".join(nums)), "-5-{}".format("-".join(nums))))
 
     def init_tab(self):
-        # Set the Grid Layout as the layout for this GUI
+        # Set the Grid Layout as the layout for this tab
         grid = QtGui.QGridLayout()
         grid.setMargin(10)
         grid.setHorizontalSpacing(10)
@@ -190,25 +190,72 @@ class CalibrationTab(QtGui.QWidget):
         pass
 
 
+class DecodingTab(QtGui.QWidget):
+    def __init__(self):
+        super(DecodingTab, self).__init__()
+
+        self.recorder = Recorder()
+        self.dictPath = os.path.dirname(os.path.realpath(__file__))
+
+        self.button_record = QtGui.QPushButton("Record")
+        self.button_decode = QtGui.QPushButton("Process")
+        self.label_result = QtGui.QLabel("")
+
+        self.init_tab()
+
+    def init_tab(self):
+        # Set the Grid Layout as the layout for this tab
+        grid = QtGui.QGridLayout()
+        grid.setMargin(10)
+        grid.setHorizontalSpacing(10)
+        grid.setVerticalSpacing(10)
+        self.setLayout(grid)
+
+        self.button_record.setStyleSheet(DEFAULT_BUTTON_STYLE + "background-color: #{}".format(Colors.START))
+        self.button_record.setFixedHeight(40)
+        self.button_record.clicked.connect(self.record_clicked)
+        self.button_decode.setStyleSheet(DEFAULT_BUTTON_STYLE + "background-color: #{}".format(Colors.PROCESS))
+        self.button_decode.setFixedHeight(40)
+        self.button_decode.clicked.connect(self.decode_clicked)
+
+        empty = QtGui.QWidget()
+        empty.setSizePolicy(QtGui.QSizePolicy.Ignored, QtGui.QSizePolicy.Expanding)
+
+        grid.addWidget(self.button_record, 0, 0)
+        grid.addWidget(self.button_decode, 0, 1)
+        grid.addWidget(empty, 1, 0)
+
+    def record_clicked(self):
+        if "Record" in self.button_record.text():
+            # Change button to its Stop version
+            self.button_record.setText("Finish")
+            self.button_record.setStyleSheet(DEFAULT_BUTTON_STYLE + "background-color: #{};".format(Colors.STOP))
+
+            # Start recordings
+            self.recorder.startRecording()
+        elif "Finish" in self.button_record.text():
+            # Change button to its Start version
+            self.button_record.setText("Record")
+            self.button_record.setStyleSheet(DEFAULT_BUTTON_STYLE + "background-color: #{};".format(Colors.START))
+
+            # Stop recording
+            self.recorder.stopRecording(os.path.join(self.dictPath, "record.wav"))
+
+    def decode_clicked(self):
+        pass  # TODO
+
+
 class Window(QtGui.QTabWidget):
     def __init__(self):
         super(Window, self).__init__()
 
         self.tab1 = CalibrationTab()
-        self.tab2 = QtGui.QWidget()
+        self.tab2 = DecodingTab()
         self.addTab(self.tab1, "Calibration")
         self.addTab(self.tab2, "Decoding")
 
-        self.init_tab2()
-
         self.move(300, 300)
         self.setWindowTitle('Cold Recorder')
-
-    def init_tab2(self):
-        pass
-
-    def on_item_clicked(self):
-        pass
 
 
 def main():
