@@ -34,7 +34,7 @@ def extract_name(name):
     :param name: recording file name
     :return: recording speaker name
     """
-    return re.search(r"[a-zA-Z]*", name).group()
+    return re.search(r"^[a-zA-Z0-9]*", name).group()
 
 
 def remove_extension(name):
