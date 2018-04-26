@@ -9,6 +9,13 @@ from coldify.generation.recorder import Recorder
 
 Data = namedtuple("Data", ["sentence", "postfix"])
 
+DEFAULT_BUTTON_STYLE = "border-radius: 2px;" + \
+                       "font-weight: bold;" + \
+                       "font-size: 14px;" + \
+                       "border-color: black;" + \
+                       "border-width: 1px;" + \
+                       "border-style: outset;"
+
 
 class Colors:
     START = "98B475"  # Green
@@ -18,29 +25,9 @@ class Colors:
     PROCESS = "79B0C0"  # Blue
 
 
-class SentenceWidget(QtGui.QWidget):
-    def __init__(self, sentence):
-        super().__init__()
-
-        self.sentence = sentence
-
-        hbox = QtGui.QHBoxLayout()
-        hbox.addWidget(QtGui.QLabel(sentence.sentence))
-
-        self.setLayout(hbox)
-        self.resize(90, 20)
-
-
-class Window(QtGui.QWidget):
-    DEFAULT_BUTTON_STYLE = "border-radius: 2px;" + \
-                           "font-weight: bold;" + \
-                           "font-size: 14px;" + \
-                           "border-color: black;" + \
-                           "border-width: 1px;" + \
-                           "border-style: outset;"
-
+class CalibrationTab(QtGui.QWidget):
     def __init__(self):
-        super(Window, self).__init__()
+        super(CalibrationTab, self).__init__()
 
         self.recorder = Recorder()
         self.dictPath = os.path.dirname(os.path.realpath(__file__))
@@ -59,7 +46,13 @@ class Window(QtGui.QWidget):
         self.list_model = None
         self.male_radio = None
         self.female_radio = None
-        self.init_ui()
+
+        self.init_tab()
+
+    def __set_sentence(self):
+        self.record_text.setText(self.sentences[self.current_index].sentence)
+        if self.status is not None:
+            self.status.setText("Status: {}\{}".format(self.current_index, len(self.sentences)))
 
     def init_sentences(self):
         # Iterate over all odd number between 1 and 24 for type 1 sentence
@@ -87,7 +80,7 @@ class Window(QtGui.QWidget):
             nums = [str(num) for num in nums]
             self.sentences.append(Data("➡➡➡ {}".format(", ".join(nums)), "-5-{}".format("-".join(nums))))
 
-    def init_ui(self):
+    def init_tab(self):
         # Set the Grid Layout as the layout for this GUI
         grid = QtGui.QGridLayout()
         grid.setMargin(10)
@@ -120,20 +113,19 @@ class Window(QtGui.QWidget):
 
         # Button used to start and stop recordings
         self.record_button = QtGui.QPushButton("התחל להקליט")
-        self.record_button.setStyleSheet(self.DEFAULT_BUTTON_STYLE + "background-color: #{};".format(Colors.START))
+        self.record_button.setStyleSheet(DEFAULT_BUTTON_STYLE + "background-color: #{};".format(Colors.START))
         self.record_button.setFixedHeight(40)
         self.record_button.clicked.connect(self.record_clicked)
 
         # Button to cancel recordings midway
         self.cancel_button = QtGui.QPushButton("בטל הקלטה")
-        self.cancel_button.setStyleSheet(
-            self.DEFAULT_BUTTON_STYLE + "background-color: #{}".format(Colors.CANCEL_DISABLED))
+        self.cancel_button.setStyleSheet(DEFAULT_BUTTON_STYLE + "background-color: #{}".format(Colors.CANCEL_DISABLED))
         self.cancel_button.setFixedHeight(40)
         self.cancel_button.setDisabled(True)
         self.cancel_button.clicked.connect(self.cancel_clicked)
 
         self.process_button = QtGui.QPushButton("Process with Kaldi")
-        self.process_button.setStyleSheet(self.DEFAULT_BUTTON_STYLE + "background-color: #{};".format(Colors.PROCESS))
+        self.process_button.setStyleSheet(DEFAULT_BUTTON_STYLE + "background-color: #{};".format(Colors.PROCESS))
         self.process_button.setFixedHeight(40)
         self.process_button.clicked.connect(self.process_clicked)
 
@@ -151,30 +143,22 @@ class Window(QtGui.QWidget):
         grid.addWidget(self.record_button, 7, 1)
         grid.addWidget(self.process_button, 8, 0, 1, 2)
 
-        self.move(300, 300)
-        self.setWindowTitle('Cold Recorder')
-
-    def __set_sentence(self):
-        self.record_text.setText(self.sentences[self.current_index].sentence)
-        if self.status is not None:
-            self.status.setText("Status: {}\{}".format(self.current_index, len(self.sentences)))
-
     def record_clicked(self):
         if "התחל" in self.record_button.text():
             # Change button to its Stop version
             self.record_button.setText("סיים הקלטה")
-            self.record_button.setStyleSheet(self.DEFAULT_BUTTON_STYLE + "background-color: #{};".format(Colors.STOP))
+            self.record_button.setStyleSheet(DEFAULT_BUTTON_STYLE + "background-color: #{};".format(Colors.STOP))
 
             # Start recordings
             self.recorder.startRecording()
 
             # Enable the Cancel button
             self.cancel_button.setDisabled(False)
-            self.cancel_button.setStyleSheet(self.DEFAULT_BUTTON_STYLE + "background-color: #{}".format(Colors.CANCEL))
+            self.cancel_button.setStyleSheet(DEFAULT_BUTTON_STYLE + "background-color: #{}".format(Colors.CANCEL))
         elif "סיים" in self.record_button.text():
             # Change button to its Start version
             self.record_button.setText("התחל להקליט")
-            self.record_button.setStyleSheet(self.DEFAULT_BUTTON_STYLE + "background-color: #{};".format(Colors.START))
+            self.record_button.setStyleSheet(DEFAULT_BUTTON_STYLE + "background-color: #{};".format(Colors.START))
 
             # Stop recording
             self.recorder.stopRecording(
@@ -183,7 +167,7 @@ class Window(QtGui.QWidget):
             # Disable the Cancel button
             self.cancel_button.setDisabled(True)
             self.cancel_button.setStyleSheet(
-                self.DEFAULT_BUTTON_STYLE + "background-color: #{}".format(Colors.CANCEL_DISABLED))
+                DEFAULT_BUTTON_STYLE + "background-color: #{}".format(Colors.CANCEL_DISABLED))
 
             # Generate a new text for the user to record
             self.current_index += 1
@@ -192,18 +176,35 @@ class Window(QtGui.QWidget):
     def cancel_clicked(self):
         # Change button to its Start version
         self.record_button.setText("התחל להקליט")
-        self.record_button.setStyleSheet(self.DEFAULT_BUTTON_STYLE + "background-color: #{};".format(Colors.START))
+        self.record_button.setStyleSheet(DEFAULT_BUTTON_STYLE + "background-color: #{};".format(Colors.START))
 
         # Disable the Cancel button
         self.cancel_button.setDisabled(True)
-        self.cancel_button.setStyleSheet(
-            self.DEFAULT_BUTTON_STYLE + "background-color: #{}".format(Colors.CANCEL_DISABLED))
+        self.cancel_button.setStyleSheet(DEFAULT_BUTTON_STYLE + "background-color: #{}".format(Colors.CANCEL_DISABLED))
 
         # Stop recording without saving
         self.recorder.stopRecording("", save=False)
 
     def process_clicked(self):
         # TODO: Chen
+        pass
+
+
+class Window(QtGui.QTabWidget):
+    def __init__(self):
+        super(Window, self).__init__()
+
+        self.tab1 = CalibrationTab()
+        self.tab2 = QtGui.QWidget()
+        self.addTab(self.tab1, "Calibration")
+        self.addTab(self.tab2, "Decoding")
+
+        self.init_tab2()
+
+        self.move(300, 300)
+        self.setWindowTitle('Cold Recorder')
+
+    def init_tab2(self):
         pass
 
     def on_item_clicked(self):
