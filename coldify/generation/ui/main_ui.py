@@ -1,5 +1,7 @@
 import os
 import random
+import shutil
+import subprocess
 import sys
 from collections import namedtuple
 
@@ -161,8 +163,11 @@ class CalibrationTab(QtGui.QWidget):
             self.record_button.setStyleSheet(DEFAULT_BUTTON_STYLE + "background-color: #{};".format(Colors.START))
 
             # Stop recording
+            if not os.path.isdir(os.path.join(self.dictPath, "recordings")):
+                os.makedirs(os.path.join(self.dictPath, "recordings"))
             self.recorder.stopRecording(
-                os.path.join(self.dictPath, self.name.text() + self.sentences[self.current_index].postfix + ".wav"))
+                os.path.join(self.dictPath, "recordings",
+                             self.name.text() + self.sentences[self.current_index].postfix + ".wav"))
 
             # Disable the Cancel button
             self.cancel_button.setDisabled(True)
@@ -186,8 +191,21 @@ class CalibrationTab(QtGui.QWidget):
         self.recorder.stopRecording("", save=False)
 
     def process_clicked(self):
-        # TODO: Chen
-        pass
+        # Clear the training folder
+        train_dir = os.path.join(self.dictPath, os.path.pardir, os.path.pardir, os.path.pardir, "digits_audio", "train")
+        shutil.rmtree(train_dir)
+        os.makedirs(train_dir)
+
+        self.process_button.setDisabled(True)
+
+        # Move all recordings to the train folder
+        shutil.copytree(os.path.join(self.dictPath, "recordings"),
+                        os.path.join(self.dictPath, os.path.pardir, os.path.pardir, os.path.pardir, "digits_audio",
+                                     "train"))
+
+        subprocess.call(["echo {} | sudo -S ./train.sh".format("q1w2e3r4")], shell=True, start_new_session=True)
+
+        self.process_button.setDisabled(False)
 
 
 class DecodingTab(QtGui.QWidget):
