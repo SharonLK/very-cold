@@ -27,6 +27,7 @@ re
 ri
 ru
 s
+se
 t
 ta
 te
