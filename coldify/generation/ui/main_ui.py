@@ -3,6 +3,7 @@ import random
 import shutil
 import subprocess
 import tkinter as tk
+import logging
 from collections import namedtuple
 from tkinter import Tk, Label, Entry, Button
 from tkinter import ttk
@@ -67,6 +68,7 @@ class TestTab(tk.Frame):
                                     state=tk.DISABLED,
                                     bg=Colors.CANCEL_DISABLED)
         self.process_button = Button(self,
+                                     command=self.process_clicked,
                                      text="Process with Kaldi",
                                      font="Arial 12 bold",
                                      height=2,
@@ -165,16 +167,26 @@ class TestTab(tk.Frame):
         # Clear the training folder
         train_dir = os.path.join(self.dictPath, os.path.pardir, os.path.pardir, os.path.pardir, "digits_audio", "train")
         shutil.rmtree(train_dir)
-        os.makedirs(train_dir)
+        os.makedirs(os.path.join(train_dir, self.name.get()))
+        print(os.path.join(train_dir, self.name.get()))
 
         self.process_button["state"] = tk.DISABLED
 
+        logging.info("Copying recordings to the training folder")
         # Move all recordings to the train folder
-        shutil.copytree(os.path.join(self.dictPath, "recordings"),
+        for recording in os.listdir(os.path.join(self.dictPath, "recordings")):
+            shutil.copy(os.path.join(self.dictPath, "recordings", recording),
                         os.path.join(self.dictPath, os.path.pardir, os.path.pardir, os.path.pardir, "digits_audio",
-                                     "train"))
+                                     "train", self.name.get(), recording))
 
+        logging.info("Organizing data")
+        subprocess.call(["python {}".format(os.path.join(self.dictPath, os.path.pardir, os.path.pardir, "pre", "organizer.py"))],
+                        shell=True, start_new_session=True)
+        logging.info("Finished organizing data")
+
+        logging.info("Executing Kaldi")
         subprocess.call(["echo {} | sudo -S ./train.sh".format("q1w2e3r4")], shell=True, start_new_session=True)
+        logging.info("Finished Kaldi")
 
         self.process_button["state"] = tk.NORMAL
 
