@@ -8,6 +8,7 @@ from collections import namedtuple
 from tkinter import Tk, Label, Entry, Button
 from tkinter import ttk
 
+from coldify.online import ReadAudioOutputWav
 from coldify.generation.recorder import Recorder
 
 Data = namedtuple("Data", ["sentence", "postfix"])
@@ -180,8 +181,9 @@ class TestTab(tk.Frame):
                                      "train", self.name.get(), recording))
 
         logging.info("Organizing data")
-        subprocess.call(["python {}".format(os.path.join(self.dictPath, os.path.pardir, os.path.pardir, "pre", "organizer.py"))],
-                        shell=True, start_new_session=True)
+        subprocess.call(
+            ["python {}".format(os.path.join(self.dictPath, os.path.pardir, os.path.pardir, "pre", "organizer.py"))],
+            shell=True, start_new_session=True)
         logging.info("Finished organizing data")
 
         logging.info("Executing Kaldi")
@@ -208,8 +210,10 @@ class DecodingTab(tk.Frame):
         self.record_button.grid(row=0, column=0, padx=10, pady=5, sticky=tk.W + tk.N + tk.E + tk.S)
 
     def record_clicked(self):
-        # Start recording
-        self.recorder.startRecording()
+        ReadAudioOutputWav.start(self.callback)
+
+    def callback(self, path):
+        pass
 
 
 class Window:
