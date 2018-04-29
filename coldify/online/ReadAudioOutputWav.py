@@ -1,11 +1,10 @@
-import math
 import struct
 import wave
 
-import matplotlib.pyplot as plt
 import numpy as np
 import pyaudio
-import checks
+
+from coldify.tomer import checks
 
 CHUNK = 1024
 FORMAT = pyaudio.paInt16
@@ -58,16 +57,16 @@ while True:
     if end_flag == 0:
 
         if start_flag == 0:
-            #plt.plot(np.arange(i * CHUNK, (i + 1) * CHUNK), data, 'blue')
+            # plt.plot(np.arange(i * CHUNK, (i + 1) * CHUNK), data, 'blue')
             start_flag = checks.checkSpeechStart(data, i)
 
         if start_flag == 1:
-            #plt.plot(np.arange(i * CHUNK, (i + 1) * CHUNK), data, 'red')
+            # plt.plot(np.arange(i * CHUNK, (i + 1) * CHUNK), data, 'red')
             end_flag = checks.checkSpeechEnd(data, i, counter)
 
-    if (start_flag == 1):
+    if start_flag == 1:
         frames.append(data_1)
-    if (end_flag == 1):
+    if end_flag == 1:
         wf = wave.open(WAVE_OUTPUT_FILENAME + str(file_number) + suffix, 'wb')
         wf.setnchannels(CHANNELS)
         wf.setsampwidth(p.get_sample_size(FORMAT))
