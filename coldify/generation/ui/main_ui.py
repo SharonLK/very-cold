@@ -3,6 +3,7 @@ import random
 import shutil
 import subprocess
 import tkinter as tk
+from tkinter import ttk
 from collections import namedtuple
 from tkinter import Tk, Label, Entry, Button
 
@@ -26,10 +27,9 @@ class Colors:
     PROCESS = "#79B0C0"  # Blue
 
 
-class Window:
-    def __init__(self, master):
-        self.master = master
-        master.title("Coldifier")
+class TestTab(tk.Frame):
+    def __init__(self, master, **kw):
+        super().__init__(master, **kw)
 
         self.recorder = Recorder()
         self.dictPath = os.path.dirname(os.path.realpath(__file__))
@@ -39,34 +39,34 @@ class Window:
         self.init_sentences()
 
         # Initialize elements
-        name_label = Label(master,
+        name_label = Label(self,
                            text="Name (in English)",
                            font="Arial 16 bold")
-        self.name = Entry(master,
+        self.name = Entry(self,
                           font="Arial 16")
-        explanation = Label(master,
+        explanation = Label(self,
                             text="Press on the Record button, read the text out loud and then press it again",
                             font="Arial 16 bold")
-        self.record_text = Label(master,
+        self.record_text = Label(self,
                                  text="Test",
                                  fg="red",
                                  font="Arial 16 bold")
-        self.status = Label(master,
+        self.status = Label(self,
                             text="Status: {}\{}".format(self.current_index, len(self.sentences)),
                             font="Arial 16 bold")
-        self.record_button = Button(master,
+        self.record_button = Button(self,
                                     text="התחל להקליט",
                                     command=self.record_clicked,
                                     font="Arial 12 bold",
                                     height=2,
                                     bg=Colors.START)
-        self.cancel_button = Button(master, text="בטל הקלטה",
+        self.cancel_button = Button(self, text="בטל הקלטה",
                                     command=self.cancel_clicked,
                                     font="Arial 12 bold",
                                     height=2,
                                     state=tk.DISABLED,
                                     bg=Colors.CANCEL_DISABLED)
-        self.process_button = Button(master,
+        self.process_button = Button(self,
                                      text="Process with Kaldi",
                                      font="Arial 12 bold",
                                      height=2,
@@ -177,6 +177,28 @@ class Window:
         subprocess.call(["echo {} | sudo -S ./train.sh".format("q1w2e3r4")], shell=True, start_new_session=True)
 
         self.process_button["state"] = tk.NORMAL
+
+
+class DecodingTab(tk.Frame):
+    def __init__(self, master, **kw):
+        super().__init__(master, **kw)
+
+        pass
+
+
+class Window:
+    def __init__(self, master):
+        self.master = master
+        master.title("Coldifier")
+
+        nb = ttk.Notebook(master)
+
+        test_tab = TestTab(nb)
+        nb.add(test_tab, text="Generating Data")
+        decode_tab = DecodingTab(nb)
+        nb.add(decode_tab, text="Online Decoding")
+
+        nb.pack(expand=1, fill="both")
 
 
 def main():
