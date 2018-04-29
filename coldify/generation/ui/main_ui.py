@@ -3,9 +3,9 @@ import random
 import shutil
 import subprocess
 import tkinter as tk
-from tkinter import ttk
 from collections import namedtuple
 from tkinter import Tk, Label, Entry, Button
+from tkinter import ttk
 
 from coldify.generation.recorder import Recorder
 
@@ -183,7 +183,21 @@ class DecodingTab(tk.Frame):
     def __init__(self, master, **kw):
         super().__init__(master, **kw)
 
-        pass
+        self.recorder = Recorder()
+        self.dictPath = os.path.dirname(os.path.realpath(__file__))
+
+        self.record_button = Button(self,
+                                    text="Start",
+                                    command=self.record_clicked,
+                                    font="Arial 12 bold",
+                                    height=2,
+                                    bg=Colors.START)
+
+        self.record_button.grid(row=0, column=0, padx=10, pady=5, sticky=tk.W + tk.N + tk.E + tk.S)
+
+    def record_clicked(self):
+        # Start recording
+        self.recorder.startRecording()
 
 
 class Window:
