@@ -56,7 +56,7 @@ def start(callback):
         data_1 = stream.read(CHUNK)
         data = get_rms(data_1)
         data = np.asarray(list(data))
-        print(data)
+
         if end_flag == 0:
 
             if start_flag == 0:

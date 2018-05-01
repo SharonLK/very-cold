@@ -255,23 +255,29 @@ if __name__ == "__main__":
         wavscp_lines.sort()
         genders_lines.sort()
 
-        with open(os.path.join(source_dir, "..", "..", "data", dir_type, "utt2spk"), "w") as f:
+        if not os.path.exists(os.path.join(source_dir, "..", "..", "data", dir_type)):
+            os.makedirs(os.path.join(source_dir, "..", "..", "data", dir_type))
+
+        with open(os.path.join(source_dir, "..", "..", "data", dir_type, "utt2spk"), "w+") as f:
             for line in utt2spk_lines:
                 f.write("{}{}".format(line, os.linesep))
 
-        with open(os.path.join(source_dir, "..", "..", "data", dir_type, "wav.scp"), "w") as f:
+        with open(os.path.join(source_dir, "..", "..", "data", dir_type, "wav.scp"), "w+") as f:
             for line in wavscp_lines:
                 f.write("{}{}".format(line, os.linesep))
 
-        with open(os.path.join(source_dir, "..", "..", "data", dir_type, "text"), "w") as f:
+        with open(os.path.join(source_dir, "..", "..", "data", dir_type, "text"), "w+") as f:
             for line in text_lines:
                 f.write("{}{}".format(line, os.linesep))
 
-        with open(os.path.join(source_dir, "..", "..", "data", dir_type, "spk2gender"), "w") as f:
+        with open(os.path.join(source_dir, "..", "..", "data", dir_type, "spk2gender"), "w+") as f:
             for line in genders_lines:
                 f.write("{}{}".format(line, os.linesep))
 
+    if not os.path.exists(os.path.join(source_dir, "..", "..", "data", "local")):
+        os.makedirs(os.path.join(source_dir, "..", "..", "data", "local"))
+
     corpus.sort()
-    with open(os.path.join(source_dir, "..", "..", "data", "local", "corpus.txt"), "w") as f:
+    with open(os.path.join(source_dir, "..", "..", "data", "local", "corpus.txt"), "w+") as f:
         for line in corpus:
             f.write("{}{}".format(line, os.linesep))
