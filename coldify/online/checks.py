@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-start_thresh = 7500
+start_thresh = 10000
 end_thresh = 4000
 counter_ones_sequence = 8
 
